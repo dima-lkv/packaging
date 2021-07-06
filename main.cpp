@@ -20,22 +20,28 @@ unsigned pSize = 0;
 class product
 {
 public:
-    
-    void setid(unsigned id)
+    template<class type1>
+    void setid(unsigned id , type1 *& type)
     {
-        this->id = id;
+        type->id = id;
     }
-    void setx(unsigned x)
+    template<class type1>
+
+    void setx(unsigned x, type1 *& type)
     {
-        this->x = x;
+        type->x = x;
     }
-    void sety(unsigned y)
+    template<class type1>
+
+    void sety(unsigned y, type1 *& type)
     {
-        this->y = y;
+        type->y = y;
     }
-    void setz(unsigned z)
+    template<class type1>
+
+    void setz(unsigned z, type1 *& type)
     {
-        this->z = z;
+        type->z = z;
     }
     
     unsigned getid()
@@ -72,7 +78,7 @@ public:
     {
         volume = x;
     }
-private:
+protected:
     unsigned id;
     unsigned x = 0,y = 0,z = 0;
     unsigned volume;
@@ -99,7 +105,7 @@ public:
         showArr(this, bSize);
     }
 private:
-    bool check = false;
+    bool check = true;
 };
 box *bArr = new box[bSize];
 
@@ -111,10 +117,10 @@ box *bArr = new box[bSize];
 void fillArr(int x, product *arr)
 {
     for (unsigned i = 0; i < pSize; i++) {
-        arr[i].setid(i);
-        arr[i].setx(rand()%x+1);
-        arr[i].sety(rand()%x+1);
-        arr[i].setz(rand()%x+1);
+        arr[i].setid(i , pArr);
+        arr[i].setx(rand()%x+1, pArr);
+        arr[i].sety(rand()%x+1, pArr);
+        arr[i].setz(rand()%x+1, pArr);
         arr[i].setVolume(arr[i].getx()*arr[i].gety()*arr[i].getz());
     }
 }
@@ -212,14 +218,25 @@ void packaging(unsigned pid, unsigned amount, unsigned boxes)
 {
     for (unsigned i = 0; i < boxes; i++)
     {
-        while (!bArr[i].getcheck())
+        while (bArr[i].getcheck())
         {
-            bArr[i].setid(i);
-            bArr[i].setx(pArr[pid].getx());
-            bArr[i].setx(pArr[pid].gety());
-            bArr[i].setx(pArr[pid].getz());
-            bArr[i].setcheck(1);
+            bArr[i].setid(i , bArr);
+            bArr[i].setx(pArr[pid].getx(), bArr);
+            bArr[i].sety(pArr[pid].gety(), bArr);
+            bArr[i].setz(pArr[pid].getz(), bArr);
+            bArr[i].setcheck(0);
             bSize++;
+            
+#ifdef deb
+            cout << "--------------------------------" << endl;
+            cout << "Product ID:\t" << bArr[i].getid() << endl;
+            cout << "size X:\t" << bArr[i].getx() << endl;
+            cout << "size Y:\t" << bArr[i].gety() << endl;
+            cout << "size Z:\t" << bArr[i].getz() << endl;
+            cout << "volume:\t" << bArr[i].getVolume() << endl;
+            cout << endl;
+#endif
+            
         }
     }
 }
